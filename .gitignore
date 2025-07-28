@@ -1,0 +1,10 @@
+target/
+*.jar
+*.log
+*.class
+application-local.properties
+postgresdata/
+README.md
+*.patch
+openshift.patch
+tests_dockerize.patch
