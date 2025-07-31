@@ -1,467 +1,292 @@
-# Students Information Manager
+# Student Management System
 
-A Spring Boot REST API application for managing student information with CRUD operations. The application persists student data to a PostgreSQL database and can be deployed using Docker.
+A comprehensive Spring Boot application for managing student information, grades, and related operations with JWT authentication, AWS S3 integration, and SMS capabilities.
 
-## 📋 Table of Contents
+## Features
 
-- [Overview](#overview)
-- [Features](#features)
-- [Technologies](#technologies)
-- [Prerequisites](#prerequisites)
-- [Getting Started](#getting-started)
-- [Project Structure](#project-structure)
-- [Configuration](#configuration)
-- [API Endpoints](#api-endpoints)
-- [Running the Application](#running-the-application)
-- [Docker Deployment](#docker-deployment)
-- [Testing](#testing)
-- [Contributing](#contributing)
-- [License](#license)
+### Core Functionality
+- **Student Management**: CRUD operations for student records
+- **Grade Management**: Track and manage student grades across different courses
+- **User Authentication**: JWT-based authentication system
+- **File Upload**: Profile picture upload to AWS S3 with presigned URLs
+- **SMS Integration**: Bulk SMS notifications to students
+- **Advanced Search**: Flexible search with pagination and sorting
+- **REST API**: Complete RESTful API with Swagger documentation
 
-## 🎯 Overview
+### Technical Features
+- Spring Boot 2.5.2 with Java 11
+- PostgreSQL database with JPA/Hibernate
+- JWT token-based authentication
+- AWS S3 integration for file storage
+- SMS service integration (SMS4Free)
+- Comprehensive testing with JUnit
+- Docker containerization
+- Swagger API documentation
 
-The Students Information Manager is a REST API built with Spring Boot that allows CRUD (Create, Read, Update, Delete) operations on student information. The application uses JPA Hibernate for database operations and PostgreSQL for data persistence.
+## Technology Stack
 
-## ✨ Features
+- **Backend**: Spring Boot, Spring Security, Spring Data JPA
+- **Database**: PostgreSQL (production), H2 (testing)
+- **Authentication**: JWT (JSON Web Tokens)
+- **Cloud Storage**: AWS S3
+- **SMS Service**: SMS4Free API
+- **Documentation**: Swagger/OpenAPI
+- **Testing**: JUnit, Mockito
+- **Containerization**: Docker, Docker Compose
+- **Build Tool**: Maven
 
-- **Complete CRUD Operations**: Create, read, update, and delete student records
-- **RESTful API**: Well-structured REST endpoints for student management
-- **Database Persistence**: PostgreSQL database integration using JPA Hibernate
-- **Data Validation**: Input validation and error handling
-- **Docker Support**: Containerized deployment with Docker
-- **Exception Handling**: Centralized error handling with custom exceptions
-- **Clean Architecture**: Follows Spring Boot best practices and layered architecture
-
-## 🛠️ Technologies
-
-- **Spring Boot** - Application framework and auto-configuration
-- **JPA Hibernate** - Object-relational mapping and database operations
-- **PostgreSQL** - Relational database for data persistence
-- **Docker** - Containerization and deployment
-- **REST API** - RESTful web services architecture
-- **Maven** - Dependency management and build tool
-
-## 🔧 Prerequisites
-
-Before running this application, make sure you have the following installed:
-
-- **Java 17** or higher
-- **Maven 3.6+**
-- **PostgreSQL 12+**
-- **Docker** (optional, for containerized deployment)
-- **Git**
-- **IDE** (IntelliJ IDEA, Eclipse, or VS Code recommended)
-
-## 🚀 Getting Started
-
-### Clone the Repository
-
-```bash
-git clone https://github.com/Evyatar831/basicspring.git
-cd basicspring
-```
-
-### Build the Project
-
-#### Using Maven
-```bash
-mvn clean install
-```
-
-## 📁 Project Structure
+## Project Structure
 
 ```
 src/
 ├── main/
-│   ├── java/
-│   │   └── com/
-│   │       └── example/
-│   │           └── studentmanager/
-│   │               ├── StudentManagerApplication.java   # Main application class
-│   │               ├── config/                          # Configuration classes
-│   │               │   └── DatabaseConfig.java
-│   │               ├── controller/                      # REST controllers
-│   │               │   └── StudentController.java
-│   │               ├── service/                         # Business logic layer
-│   │               │   └── StudentService.java
-│   │               ├── repository/                      # Data access layer
-│   │               │   └── StudentRepository.java
-│   │               ├── model/                          # Entity classes
-│   │               │   └── Student.java
-│   │               ├── dto/                            # Data Transfer Objects
-│   │               │   └── StudentDTO.java
-│   │               └── exception/                      # Custom exceptions
-│   │                   ├── StudentNotFoundException.java
-│   │                   └── GlobalExceptionHandler.java
+│   ├── java/com/handson/basic/
+│   │   ├── controller/          # REST controllers
+│   │   ├── model/              # Entity and DTO classes
+│   │   ├── repo/               # Repository interfaces and services
+│   │   ├── jwt/                # JWT authentication components
+│   │   ├── util/               # Utility classes
+│   │   └── config/             # Configuration classes
 │   └── resources/
-│       ├── application.properties                      # Application configuration
-│       ├── application-docker.properties               # Docker configuration
-│       └── docker/
-│           └── docker-compose.yml                      # Docker compose file
+│       └── application.properties
 └── test/
-    └── java/
-        └── com/
-            └── example/
-                └── studentmanager/                     # Test classes
-                    ├── controller/
-                    │   └── StudentControllerTest.java
-                    ├── service/
-                    │   └── StudentServiceTest.java
-                    └── repository/
-                        └── StudentRepositoryTest.java
+    ├── java/                   # Test classes
+    └── resources/              # Test resources
 ```
 
-### Key Components
+## Getting Started
 
-- **Controllers**: Handle HTTP requests and responses
-- **Services**: Contain business logic and processing
-- **Repositories**: Manage data persistence and retrieval
-- **Models/Entities**: Represent data structures
-- **DTOs**: Transfer data between layers
-- **Configuration**: Application and component configuration
+### Prerequisites
 
-## ⚙️ Configuration
+- Java 11 or higher
+- Maven 3.6+
+- PostgreSQL 12+
+- Docker (optional)
+- AWS Account (for S3 integration)
+- SMS4Free account (for SMS functionality)
 
-### Application Properties
+### Installation
 
-The application can be configured using `application.properties`:
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd student-management-system
+   ```
 
-```properties
-# Server configuration
-server.port=8080
+2. **Configure the database**
+   
+   Update `src/main/resources/application.properties`:
+   ```properties
+   spring.datasource.url=jdbc:postgresql://localhost:5432/your_database
+   spring.datasource.username=your_username
+   spring.datasource.password=your_password
+   ```
 
-# PostgreSQL Database configuration
-spring.datasource.url=jdbc:postgresql://localhost:5432/studentdb
-spring.datasource.username=postgres
-spring.datasource.password=yourpassword
-spring.datasource.driver-class-name=org.postgresql.Driver
+3. **Configure AWS S3**
+   ```properties
+   amazon.aws.accesskey=your_access_key
+   amazon.aws.secretkey=your_secret_key
+   bucket.url=your_bucket_name
+   ```
 
-# JPA Hibernate configuration
-spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.format_sql=true
+4. **Configure SMS Service**
+   ```properties
+   sms4free.key=your_sms_key
+   sms4free.user=your_sms_user
+   sms4free.password=your_sms_password
+   ```
 
-# Logging
-logging.level.com.example.studentmanager=DEBUG
+5. **Build and run**
+   ```bash
+   mvn clean install
+   mvn spring-boot:run
+   ```
+
+### Using Docker
+
+1. **Start with Docker Compose**
+   ```bash
+   docker-compose up -d
+   ```
+
+   This will start:
+   - PostgreSQL database on port 5432
+   - Application server on port 8080
+
+2. **For CI/CD environment**
+   ```bash
+   docker-compose -f docker-compose-ci.yml up
+   ```
+
+## API Documentation
+
+Once the application is running, access the Swagger UI at:
+```
+http://localhost:8080/swagger-ui.html
 ```
 
-### Docker Configuration (`application-docker.properties`)
+### Authentication
 
-```properties
-# Server configuration
-server.port=8080
+1. **Create a user**
+   ```bash
+   POST /user
+   {
+     "username": "testuser",
+     "password": "password123"
+   }
+   ```
 
-# PostgreSQL Database configuration for Docker
-spring.datasource.url=jdbc:postgresql://postgres-db:5432/studentdb
-spring.datasource.username=postgres
-spring.datasource.password=postgres
-spring.datasource.driver-class-name=org.postgresql.Driver
+2. **Authenticate**
+   ```bash
+   POST /authenticate
+   {
+     "username": "testuser",
+     "password": "password123"
+   }
+   ```
 
-# JPA Hibernate configuration
-spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
-spring.jpa.hibernate.ddl-auto=create-drop
-spring.jpa.show-sql=true
-```
+3. **Use the returned JWT token**
+   Add to request headers:
+   ```
+   Authorization: Bearer <your-jwt-token>
+   ```
 
-## 🌐 API Endpoints
+### Key Endpoints
 
-### Base URL
-```
-http://localhost:8080/api
-```
+#### Student Management
+- `GET /api/students` - Search students with filters
+- `POST /api/students` - Create new student
+- `GET /api/students/{id}` - Get student by ID
+- `PUT /api/students/{id}` - Update student
+- `DELETE /api/students/{id}` - Delete student
+- `PUT /api/students/{id}/image` - Upload profile picture
 
-### Student CRUD Operations
+#### Grade Management
+- `POST /api/students/{studentId}/grades` - Add grade
+- `PUT /api/students/{studentId}/grades/{id}` - Update grade
+- `DELETE /api/students/{studentId}/grades/{id}` - Delete grade
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET    | `/students` | Get all students |
-| GET    | `/students/{id}` | Get student by ID |
-| POST   | `/students` | Create new student |
-| PUT    | `/students/{id}` | Update existing student |
-| DELETE | `/students/{id}` | Delete student |
+#### Other Features
+- `GET /api/students/highSat?sat=600` - Get students with high SAT scores
+- `POST /api/students/sms/all?text=message` - Send SMS to all students
 
-### Example Request/Response
+## Data Models
 
-**GET** `/api/students/1`
-
-Response:
+### Student
 ```json
 {
-  "id": 1,
-  "firstName": "John",
-  "lastName": "Doe",
-  "email": "john.doe@student.edu",
-  "studentId": "STU001",
-  "phoneNumber": "+1234567890",
-  "address": "123 Main St, City, State",
-  "dateOfBirth": "2000-05-15",
-  "enrollmentDate": "2024-01-15",
-  "major": "Computer Science"
+  "fullname": "John Doe",
+  "birthDate": "1995-05-15",
+  "satScore": 750,
+  "graduationScore": 85.5,
+  "phone": "052-123-4567"
 }
 ```
 
-**POST** `/api/students`
-
-Request:
+### Grade
 ```json
 {
-  "firstName": "Jane",
-  "lastName": "Smith",
-  "email": "jane.smith@student.edu",
-  "studentId": "STU002",
-  "phoneNumber": "+1234567891",
-  "address": "456 Oak Ave, City, State",
-  "dateOfBirth": "1999-08-22",
-  "major": "Mathematics"
+  "courseName": "Mathematics",
+  "courseScore": 95
 }
 ```
 
-**PUT** `/api/students/1`
+## Search and Filtering
 
-Request:
-```json
-{
-  "firstName": "John",
-  "lastName": "Doe",
-  "email": "john.doe.updated@student.edu",
-  "phoneNumber": "+1234567892",
-  "address": "789 Pine St, City, State",
-  "major": "Computer Engineering"
-}
+The student search endpoint supports various filters:
+- `fullName` - Filter by student name
+- `fromBirthDate` / `toBirthDate` - Filter by birth date range
+- `fromSatScore` / `toSatScore` - Filter by SAT score range
+- `fromAvgScore` - Filter by average grade
+- `page` / `count` - Pagination
+- `sort` / `sortDirection` - Sorting options
+
+Example:
+```
+GET /api/students?fullName=John&fromSatScore=600&page=1&count=10&sort=fullName&sortDirection=asc
 ```
 
-**DELETE** `/api/students/1`
+## Testing
 
-Response: `204 No Content`
-
-## 🏃‍♂️ Running the Application
-
-### 1. Setup PostgreSQL Database
-```sql
--- Create database
-CREATE DATABASE studentdb;
-
--- Create user (optional)
-CREATE USER studentuser WITH PASSWORD 'password';
-GRANT ALL PRIVILEGES ON DATABASE studentdb TO studentuser;
-```
-
-### 2. Run the Application
-
-#### Using Maven
-```bash
-mvn spring-boot:run
-```
-
-#### Using JAR file
-```bash
-# Build the JAR first
-mvn clean package
-# Run the JAR
-java -jar target/studentmanager-0.0.1-SNAPSHOT.jar
-```
-
-#### Using IDE
-Run the `StudentManagerApplication.java` class directly from your IDE.
-
-The application will start on `http://localhost:8080`
-
-## 🐳 Docker Deployment
-
-### Using Docker Compose (Recommended)
-
-1. **Create docker-compose.yml**:
-```yaml
-version: '3.8'
-services:
-  postgres-db:
-    image: postgres:15
-    container_name: student-postgres
-    environment:
-      POSTGRES_DB: studentdb
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-  student-app:
-    build: .
-    container_name: student-manager-app
-    depends_on:
-      - postgres-db
-    ports:
-      - "8080:8080"
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-    volumes:
-      - ./logs:/app/logs
-
-volumes:
-  postgres_data:
-```
-
-2. **Create Dockerfile**:
-```dockerfile
-FROM openjdk:17-jdk-slim
-
-WORKDIR /app
-
-COPY target/studentmanager-0.0.1-SNAPSHOT.jar app.jar
-
-EXPOSE 8080
-
-ENTRYPOINT ["java", "-jar", "app.jar"]
-```
-
-3. **Build and Run**:
-```bash
-# Build the application
-mvn clean package
-
-# Run with Docker Compose
-docker-compose up --build
-```
-
-### Using Docker Only
-
-```bash
-# Build the application
-mvn clean package
-
-# Build Docker image
-docker build -t student-manager .
-
-# Run PostgreSQL container
-docker run --name postgres-db -e POSTGRES_DB=studentdb -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres:15
-
-# Run application container
-docker run --name student-app --link postgres-db:postgres-db -p 8080:8080 -e SPRING_PROFILES_ACTIVE=docker student-manager
-```
-
-## 🧪 Testing
-
-### Run All Tests
+Run the test suite:
 ```bash
 mvn test
 ```
 
-### Test Categories
-- **Unit Tests**: Test individual components in isolation
-- **Integration Tests**: Test database operations and component interactions
-- **Web Layer Tests**: Test REST controllers using `@WebMvcTest`
+The project includes:
+- Unit tests for controllers and services
+- Integration tests with H2 database
+- Mock objects for external services (AWS S3, SMS)
 
-### Example Test Structure
-```java
-@SpringBootTest
-class StudentManagerApplicationTests {
-    
-    @Test
-    void contextLoads() {
-        // Test application context loads successfully
-    }
-}
+## Configuration
 
-@WebMvcTest(StudentController.class)
-class StudentControllerTest {
-    
-    @Autowired
-    private MockMvc mockMvc;
-    
-    @MockBean
-    private StudentService studentService;
-    
-    @Test
-    void shouldReturnAllStudents() throws Exception {
-        mockMvc.perform(get("/api/students"))
-               .andExpect(status().isOk());
-    }
-}
+### Environment Variables
 
-@DataJpaTest
-class StudentRepositoryTest {
-    
-    @Autowired
-    private TestEntityManager entityManager;
-    
-    @Autowired
-    private StudentRepository studentRepository;
-    
-    @Test
-    void shouldFindStudentById() {
-        // Test repository operations
-    }
-}
+For production deployment, use environment variables:
+- `SPRING_DATASOURCE_URL`
+- `SPRING_DATASOURCE_USERNAME`
+- `SPRING_DATASOURCE_PASSWORD`
+- `AMAZON_AWS_ACCESSKEY`
+- `AMAZON_AWS_SECRETKEY`
+- `BUCKET_URL`
+- `SMS4FREE_KEY`
+- `SMS4FREE_USER`
+- `SMS4FREE_PASSWORD`
+
+### Security
+
+- JWT tokens expire after 5 hours
+- Passwords are encrypted using BCrypt
+- CORS is configured for cross-origin requests
+- All endpoints (except authentication) require valid JWT token
+
+## Deployment
+
+### Production Deployment
+
+1. **Build the JAR file**
+   ```bash
+   mvn clean package
+   ```
+
+2. **Run with production profile**
+   ```bash
+   java -jar target/basic-*.jar --spring.profiles.active=production
+   ```
+
+### Docker Deployment
+
+Build and deploy using Docker:
+```bash
+docker build -t student-management-system .
+docker run -p 8080:8080 student-management-system
 ```
 
-## 🛠️ Built With
+## Contributing
 
-- **[Spring Boot](https://spring.io/projects/spring-boot)** - Application framework and auto-configuration
-- **[JPA Hibernate](https://hibernate.org/)** - Object-relational mapping and database operations
-- **[PostgreSQL](https://www.postgresql.org/)** - Relational database for data persistence
-- **[Docker](https://www.docker.com/)** - Containerization and deployment
-- **[Maven](https://maven.apache.org/)** - Dependency management and build tool
-- **[JUnit 5](https://junit.org/junit5/)** - Testing framework
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Ensure all tests pass
+6. Submit a pull request
 
-## 📈 Development
+## License
 
-### Adding New Features
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-1. **Extend Student Entity**: Add new fields to `Student.java` entity
-2. **Update Repository**: Add custom query methods to `StudentRepository.java`
-3. **Enhance Service**: Add business logic in `StudentService.java`
-4. **Update Controller**: Add new REST endpoints in `StudentController.java`
-5. **Create/Update DTO**: Modify `StudentDTO.java` for API communication
-6. **Add Tests**: Create corresponding test classes
+## Support
 
-### Common Development Tasks
-- **Add student search**: Implement search by name, email, or student ID
-- **Add pagination**: Implement paginated results for large datasets
-- **Add validation**: Enhance input validation for student data
-- **Export functionality**: Add endpoints to export student data (CSV, PDF)
-- **Bulk operations**: Implement bulk insert/update operations
+For support and questions:
+- Email: admin@handson-academy.com
+- Website: https://handson-academy.com
 
-### Database Migration
-- Use Flyway or Liquibase for database schema versioning
-- Add migration scripts in `src/main/resources/db/migration/`
+## Changelog
 
-### Code Style
-- Follow Java naming conventions
-- Use meaningful variable and method names
-- Add appropriate comments and documentation
-- Maintain consistent indentation and formatting
-
-## 🤝 Contributing
-
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 📞 Contact
-
-**Evyatar** - [@Evyatar831](https://github.com/Evyatar831)
-
-Project Link: [https://github.com/Evyatar831/basicspring](https://github.com/Evyatar831/basicspring)
-
----
-
-## 🔗 Additional Resources
-
-- [Spring Boot Documentation](https://spring.io/projects/spring-boot)
-- [Spring Data JPA Reference](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/)
-- [Hibernate ORM Documentation](https://hibernate.org/orm/documentation/)
-- [PostgreSQL Documentation](https://www.postgresql.org/docs/)
-- [Docker Documentation](https://docs.docker.com/)
-- [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
-- [Spring Boot with PostgreSQL](https://spring.io/guides/gs/accessing-data-postgresql/)
-
----
-*Happy Coding! 🚀*
+### Version 0.0.1-SNAPSHOT
+- Initial release
+- Student and grade management
+- JWT authentication
+- AWS S3 integration
+- SMS functionality
+- Swagger documentation
